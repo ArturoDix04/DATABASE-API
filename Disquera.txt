@@ -1,0 +1,192 @@
+﻿create database ejercicio_22sept;
+
+use ejercicio_22sept;
+
+
+CREATE TABLE `recording_label` (
+  `id_recording_label` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL,
+  `location` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id_recording_label`)
+);
+
+CREATE TABLE `album` (
+  `id_album` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL,
+  `rating` float DEFAULT NULL,
+  `year` int NOT NULL,
+  `sales` int NOT NULL,
+  `id_rl` int NOT NULL,
+  `id_group` int NOT NULL,
+  PRIMARY KEY (`id_album`),
+  KEY `Album_FK` (`id_rl`),
+  KEY `album_FK_group` (`id_group`),
+  CONSTRAINT `Album_FK` FOREIGN KEY (`id_rl`) REFERENCES `recording_label` (`id_recording_label`),
+  CONSTRAINT `album_FK_group` FOREIGN KEY (`id_group`) REFERENCES `group` (`id_group`)
+);
+
+CREATE TABLE `song` (
+  `id_song` int NOT NULL AUTO_INCREMENT,
+  `title` varchar(30) NOT NULL,
+  `rating` float DEFAULT NULL,
+  PRIMARY KEY (`id_song`)
+);
+
+CREATE TABLE `group` (
+  `id_group` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL,
+  PRIMARY KEY (`id_group`)
+);
+
+CREATE TABLE `artist` (
+  `id_artist` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(30) NOT NULL,
+  `last_name` varchar(30) NOT NULL,
+  `born_in` date DEFAULT NULL,
+  PRIMARY KEY (`id_artist`)
+);
+
+CREATE TABLE `album_song_rel` (
+  `id_album` int NOT NULL,
+  `id_song` int NOT NULL,
+  `track` int NOT NULL,
+  PRIMARY KEY (`id_album`,`id_song`),
+  KEY `album_song_rel_FK_1` (`id_song`),
+  CONSTRAINT `album_song_rel_FK` FOREIGN KEY (`id_album`) REFERENCES `album` (`id_album`),
+  CONSTRAINT `album_song_rel_FK_1` FOREIGN KEY (`id_song`) REFERENCES `song` (`id_song`)
+);
+
+CREATE TABLE `artist_group_relation` (
+  `id_artist` int NOT NULL,
+  `id_group` int NOT NULL,
+  `joined` int DEFAULT NOT NULL,
+  `left` int DEFAULT NULL,
+  PRIMARY KEY (`id_artist`,`id_group`),
+  KEY `artist_group_relation_FK` (`id_group`),
+  CONSTRAINT `artist_group_relation_FK` FOREIGN KEY (`id_group`) REFERENCES `group` (`id_group`),
+  CONSTRAINT `artist_group_relation_FK_1` FOREIGN KEY (`id_artist`) REFERENCES `artist` (`id_artist`)
+);
+
+CREATE TABLE `song_artist_relation` (
+  `id_song` int NOT NULL,
+  `id_artist` int NOT NULL,
+  PRIMARY KEY (`id_song`,`id_artist`),
+  KEY `song_artist_relation_FK_1` (`id_artist`),
+  CONSTRAINT `song_artist_relation_FK` FOREIGN KEY (`id_song`) REFERENCES `song` (`id_song`),
+  CONSTRAINT `song_artist_relation_FK_1` FOREIGN KEY (`id_artist`) REFERENCES `artist` (`id_artist`)
+);
+
+
+
+
+
+
+/*
+ * DML: Data Manipulation Languaje. Sirve para modificar los datos contenidos en una Base de Datos.
+ *
+ * Instrucciones: Para la clase ejecutaremos algunas consultas básicas de SQL. Requieres algunos datos.
+ * A continuación te dejo algunos datos que necesitas insertar en tu base de datos para la clase.
+ * Copia y pega el siguiente código SQL en un editor de SQL utilizando tu cliente SQL para insertar
+ * los datos en tu base de datos.
+ */
+
+
+INSERT INTO ejercicio_22sep.recording_label
+(name, location)
+VALUES('Elektra Records', '962 La Cienega Boulevard,Los Angeles, CA');
+
+INSERT INTO ejercicio_22sep.`group`
+(name)
+VALUES('Metallica')
+
+
+INSERT INTO ejercicio_22sep.album
+(name, rating, `year`, sales, id_rl,id_group)
+VALUES('Black Album', 4.5 ,1990, 31000000, 1, 1);
+
+INSERT INTO ejercicio_22sep.song
+(title, rating) values
+('Enter Sandman', 4.9),
+('Sad but true', 4.1),
+('Holier Than Thou', 4.5),
+('The Unforgiven', 4.3),
+('Wherever I May Roam', 4.8),
+('Dont Tread on Me', 4.4),
+('Through the Never', 4.7),
+('Nothing Else Matters', 5.0),
+('Of Wolf and Man', 4.4),
+('The God That Failed', 4.3),
+('My Friend of Misery', 4.4),
+('The Struggle Within', 4.2);
+
+
+INSERT INTO ejercicio_22sep.artist
+(name, last_name, born_in) values
+('James', 'Hetfield', '1963-08-03'),
+('Lars', 'Urlich', '1963-12-26'),
+('Rob', 'Trujillo', '1964-10-23'),
+('Kirk', 'Hammett', '1962-11-18'),
+('Jason', 'Newsted', '1963-03-04'),
+('Cliff', 'Burton', '1962-02-10'),
+('Dave', 'Mustain', '1961-09-13');
+
+
+INSERT INTO ejercicio_22sep.album_song_rel
+(id_album, id_song, track) values
+(1, 1, 1),
+(1, 2, 2),
+(1, 3, 3),
+(1, 4, 4),
+(1, 5, 5),
+(1, 6, 6),
+(1, 7, 7),
+(1, 8, 8),
+(1, 9, 9),
+(1, 10, 10),
+(1, 11, 11),
+(1, 12, 12);
+
+
+INSERT INTO ejercicio_22sep.artist_group_relation
+(id_artist, id_group, joined, `left`) values
+(1, 1, 1981,null ),
+(2, 1, 1981, null),
+(3, 1, 2003, null),
+(4, 1, 1983, null),
+(5, 1, 1986, 2001),
+(6, 1, 1982, 1986),
+(7, 1, 1982, 1983);
+
+
+
+INSERT INTO ejercicio_22sep.song_artist_relation
+(id_song, id_artist) values
+(1, 1), 
+(1, 2), 
+(1, 4), 
+(2, 1), 
+(2, 2), 
+(3, 1), 
+(3, 2), 
+(4, 1), 
+(4, 2), 
+(4, 4), 
+(5, 1), 
+(5, 2), 
+(6, 1), 
+(6, 2), 
+(7, 1), 
+(7, 2), 
+(7, 4), 
+(8, 1), 
+(8, 2), 
+(9, 1), 
+(9, 2), 
+(9, 4), 
+(10, 1),
+(10, 2),
+(11, 1),
+(11, 2),
+(11, 5),
+(12, 1),
+(12, 2);
